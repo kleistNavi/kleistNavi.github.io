@@ -1,21 +1,19 @@
 /* 全局字体 */
 * {
-    font-family: "Sarasa UI SC", "Segoe UI Semibold", "Segoe UI", Helvetica,
-        Arial, sans-serif;
+    font-family: "Sarasa UI SC", "Microsoft YaHei","微软雅黑", "Segoe UI", Helvetica,Arial, sans-serif;
     font-weight: normal;
-    letter-spacing: 1px;
+    /* letter-spacing: 1px; */
 }
 a {
   color:#191a1a;
 }
 /* 导航栏 */
 nav.navbar.user-info-navbar {
-    background: rgba(255, 255, 255) !important;
+    background: rgba(255, 255, 255,0.4) !important;
     height: 66px;
+    backdrop-filter: blur(4px);
 }
-.night nav.navbar.user-info-navbar {
-    /* background: rgba(0, 0, 0) !important; */
-}
+
 .user-info-navbar .user-info-menu > li {
     border-right: 0;
     height: 66px;
@@ -234,11 +232,11 @@ h4.text-gray {
     color: #fff;
 }
 strong {
-    font-size: 18px;
+    font-size: 1.2em;
 }
 p.overflowClip_2 {
-    font-size: 16px;
-    color: #808080;
+    font-size: 1.1em;
+    color: #606060;
 }
 body.night .xe-comment p {
     color: #aaa !important;
@@ -556,4 +554,29 @@ body.night .user-info-navbar .user-info-menu > li {
 }
 .night nav.navbar.user-info-navbar,.night nav.navbar.user-info-navbar,body.night .user-info-navbar,.user-info-navbar {
   background: transparent !important;
+}
+
+.night .tooltip-inner {
+    border-radius: 8px !important;
+    -webkit-border-radius: 8px !important;
+    -moz-border-radius: 8px !important;
+    -ms-border-radius: 8px !important;
+    -o-border-radius: 8px !important;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    color: #eee;
+}
+.tooltip-inner {
+    border-radius: 8px !important;
+    -webkit-border-radius: 8px !important;
+    -moz-border-radius: 8px !important;
+    -ms-border-radius: 8px !important;
+    -o-border-radius: 8px !important;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(5px);
+    color: #111;
+    /* font-weight: bold; */
+}
+.tooltip.in {
+    opacity: 1;
 }
