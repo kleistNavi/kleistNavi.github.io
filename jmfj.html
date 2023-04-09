@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>kleist 简繁转换</title>
+    <link rel="shortcut icon" href="icon.png">
+    <!-- 引入Bootstrap CSS文件 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css">
+    <!-- 引入clipboard.js库 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+
+    <style>
+        body {
+            /* background-image: url('https://random-picture.vercel.app/api'); */
+            background-size: cover;
+            background-position: center center;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.25);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 11px 34px 0 rgba(0,0,0,.2);
+            min-width: 50vw;
+            max-height: 80vh;
+            backdrop-filter: blur(5px);
+        }
+        textarea {
+            border-radius: 0.3rem;
+        }
+        .form-control {
+            background-color: #ffffff8a;
+        }
+
+        .form-control:disabled, .form-control[readonly] {
+            background-color: #1d4b7973;
+        }
+
+        /* 夜间模式相关样式 */
+        .night-mode {
+            background-color: #111;
+            color: #fff;
+        }
+
+        .night-mode textarea {
+            background-color: #3333336d;
+            color: #eee;
+        }
+
+        .night-mode button {
+            background-color: #444;
+            color: #fff;
+        }
+
+        .night-mode .container {
+            background-color: rgba(0, 0, 0, 0.25);
+        }
+
+        .night-mode .copy-success {
+            background-color: #007bff;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <!-- 文本输入框 -->
+                <div class="mb-3">
+                    <label for="input" class="form-label">请输入要转换的内容：</label>
+                    <textarea id="input" class="form-control" rows="15" placeholder="By:kleist 僅供内部使用"></textarea>
+                </div>
+                <!-- 转换按钮 -->
+                <button id="convert-btn" class="btn btn-primary btn-lg mb-3">转换为繁体</button>
+                <!-- 转换后的文本框 -->
+                <div class="mb-3">
+                    <label for="output" class="form-label">轉換後的臺灣正體：</label>
+                    <textarea id="output" class="form-control" rows="15" readonly placeholder="By:kleist 僅供内部使用"></textarea>
+                </div>
+                <!-- 复制按钮 -->
+                <button id="copy-btn" class="btn btn-secondary btn-lg">複製文本</button>
+                <!-- 夜间模式切换按钮 -->
+                <button id="night-mode-btn" class="btn btn-secondary btn-sm mt-3">夜间模式</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入Bootstrap JS文件 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.0.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 初始化夜间模式状态
+            var isNightModeEnabled = localStorage.getItem('nightModeEnabled');
+            if (isNightModeEnabled === 'true') {
+                $('body').addClass('night-mode');
+            }
+
+            $('#convert-btn').click(function() {
+                var input = $('#input').val();
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://openwrt.kleist.world:5000',
+                    data: { text: input },
+                    success: function(response) {
+                        console.log(response.result);
+                        $('#output').val(response.result);
+                    }
+                });
+            });
+
+            // 初始化Clipboard实例
+            var clipboard = new ClipboardJS('#copy-btn', {
+                text: function() {
+                    return $('#output').val();
+                }
+            });
+            // 监听复制成功事件
+            clipboard.on('success', function(e) {
+                e.trigger.classList.add('copy-success');
+                setTimeout(function() {
+                    e.trigger.classList.remove('copy-success');
+                }, 1000);
+                e.clearSelection();
+            });
+
+            // 夜间模式切换事件监听器
+            $('#night-mode-btn').click(function() {
+                $('body').toggleClass('night-mode');
+                var isNightModeEnabled = $('body').hasClass('night-mode');
+                localStorage.setItem('nightModeEnabled', isNightModeEnabled);
+            });
+        });
+        let randomTimer
+
+        function randomColor() {
+            const r = randomInt(255)
+            const g = randomInt(255)
+            const b = randomInt(255)
+            const c = `#${r.toString(16)}${g.toString(16)}${b.toString(16)}000`
+            return c.slice(0, 7)
+        }
+
+        function randomInt(max) {
+            return Math.floor(Math.random() * max)
+        }
+
+        function randomBgImg() {
+            clearInterval(randomTimer)
+            const el = document.createElement('div')
+            const deg = randomInt(360)
+            el.id = 'random-light-bg'
+            el.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;z-index:-99;transition: 1s linear;"
+            
+            el.style.backgroundImage =
+                `linear-gradient(${deg}deg, ${randomColor()} 0%, ${randomColor()} 100%)`
+            document.body.appendChild(el)
+
+            function setBg() {
+                const randomBg =
+                    `linear-gradient(${deg}deg, ${randomColor()} 0%, ${randomColor()} 100%)`
+                el.style.opacity = '.3'
+                setTimeout(() => {
+                    el.style.backgroundImage = randomBg
+                    el.style.opacity = '1'
+                }, 1000)
+            }
+
+            randomTimer = setInterval(setBg, 10000)
+        }
+        randomBgImg();
+
+    </script>
+
+</body>
