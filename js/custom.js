@@ -34,7 +34,7 @@ window.onload = function changeBackgroundImage() {
 	var randomBgIndex = Math.round(Math.random() * 6);
 	//输出随机的背景图
 	// $("div.bg").css("background","url(https://moepic2586.herokuapp.com//moePic?class="+ classname + ")	no-repeat center center");
-	$("div.bg").css("background","url(https://random-picture.vercel.app/api" + ")	no-repeat center center");
+	$("div.bg").css("background","url(https://api.likepoems.com/img/bing" + ")	no-repeat center center");
     // $("div.bg").css("background","url(" + bodyBgs[randomBgIndex]+")	no-repeat center center");
 	// $("div.bg").css("background-size","cover");
 }
