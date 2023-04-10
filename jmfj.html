@@ -108,7 +108,7 @@
                 var input = $('#input').val();
                 $.ajax({
                     type: 'POST',
-                    url: 'https://openwrt.kleist.world:5000',
+                    url: 'http://openwrt.kleist.world:5000',
                     data: { text: input },
                     success: function(response) {
                         console.log(response.result);
