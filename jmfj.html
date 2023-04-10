@@ -76,14 +76,14 @@
                 <!-- 文本输入框 -->
                 <div class="mb-3">
                     <label for="input" class="form-label">请输入要转换的内容：</label>
-                    <textarea id="input" class="form-control" rows="15" placeholder="By:kleist 僅供内部使用"></textarea>
+                    <textarea id="input" class="form-control" rows="10" placeholder="By:kleist 僅供内部使用"></textarea>
                 </div>
                 <!-- 转换按钮 -->
                 <button id="convert-btn" class="btn btn-primary btn-lg mb-3">转换为繁体</button>
                 <!-- 转换后的文本框 -->
                 <div class="mb-3">
                     <label for="output" class="form-label">轉換後的臺灣正體：</label>
-                    <textarea id="output" class="form-control" rows="15" readonly placeholder="By:kleist 僅供内部使用"></textarea>
+                    <textarea id="output" class="form-control" rows="10" readonly placeholder="By:kleist 僅供内部使用"></textarea>
                 </div>
                 <!-- 复制按钮 -->
                 <button id="copy-btn" class="btn btn-secondary btn-lg">複製文本</button>
@@ -108,7 +108,7 @@
                 var input = $('#input').val();
                 $.ajax({
                     type: 'POST',
-                    url: 'http://openwrt.kleist.world:5000',
+                    url: 'https://openwrt.kleist.world:5000',
                     data: { text: input },
                     success: function(response) {
                         console.log(response.result);
