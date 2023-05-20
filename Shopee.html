@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>產品定價計算器</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-5">產品定價計算器</h1>
+        <form>
+            <div class="form-group row">
+                <label for="length" class="col-sm-2 col-form-label text-right">長度（厘米）：</label>
+                <div class="col-sm-2">
+                    <input type="text" id="length" class="form-control" required>
+                </div>
+                <label for="width" class="col-sm-2 col-form-label text-right">寬度（厘米）：</label>
+                <div class="col-sm-2">
+                    <input type="text" id="width" class="form-control" required>
+                </div>
+                <label for="height" class="col-sm-2 col-form-label text-right">高度（厘米）：</label>
+                <div class="col-sm-2">
+                    <input type="text" id="height" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="weight" class="col-sm-2 col-form-label text-right">重量（千克）：</label>
+                <div class="col-sm-2">
+                    <input type="text" id="weight" class="form-control" required>
+                </div>
+                <label for="cost" class="col-sm-2 col-form-label text-right">進價成本（RMB）：</label>
+                <div class="col-sm-2">
+                    <input type="text" id="cost" class="form-control" required>
+                </div>
+                <label for="liry" class="col-sm-2 col-form-label text-right">利润率：</label>
+                <div class="col-sm-2">
+                    <input type="text" id="liry" class="form-control" value="50" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="threshold1" class="col-sm-2 col-form-label text-right">門檻1（TWD）：</label>
+                <div class="col-sm-2">
+                    <input type="text" id="threshold1" class="form-control" value="299" required>
+                </div>
+                <label for="discount1" class="col-sm-2 col-form-label text-right">滿減1（TWD）：</label>
+                <div class="col-sm-2">
+                    <input type="text" id="discount1" class="form-control" value="10" required>
+                </div>
+                <label for="vekzlv" class="col-sm-2 col-form-label text-right">折扣率：</label>
+                <div class="col-sm-2">
+                    <input type="text" id="vekzlv" class="form-control" value="35" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="threshold2" class="col-sm-2 col-form-label text-right">門檻2（TWD）：</label>
+                <div class="col-sm-2">
+                    <input type="text" id="threshold2" class="form-control" value="499" required>
+                </div>
+                <label for="discount2" class="col-sm-2 col-form-label text-right">滿減2（TWD）：</label>
+                <div class="col-sm-2">
+                    <input type="text" id="discount2" class="form-control" value="20" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="threshold3" class="col-sm-2 col-form-label text-right">門檻3（TWD）：</label>
+                <div class="col-sm-2">
+                    <input type="text" id="threshold3" class="form-control" value="899" required>
+                </div>
+                <label for="discount3" class="col-sm-2 col-form-label text-right">滿減3（TWD）：</label>
+                <div class="col-sm-2">
+                    <input type="text" id="discount3" class="form-control" value="35" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" checked='checked' id="noTransportationFee"
+                            name="transportationFee" value="noTransportationFee">
+                        <label class="form-check-label" for="noTransportationFee">免运手续费 5%</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" checked='checked' id="transactionFee"
+                            name="transactionFee" value="transactionFee">
+                        <label class="form-check-label" for="transactionFee">成交手续费 5.5%</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" checked='checked' id="paymentServiceFee"
+                            name="paymentServiceFee" value="paymentServiceFee">
+                        <label class="form-check-label" for="paymentServiceFee">金流服务费 2%</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" checked='checked' id="taxFee" name="taxFee"
+                            value="taxFee">
+                        <label class="form-check-label" for="paymentServiceFee">稅金费用 5%</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group text-center">
+                <button type="button" class="btn btn-success" onclick="calculate()">計算</button>
+            </div>
+
+        </form>
+        <div class="card mt-5">
+            <div class="card-header">
+                <h2 class="text-center">計算結果</h2>
+            </div>
+            <div class="row">
+                <div class="col">
+                </div>
+                <div class="col">
+                    <p>平台費用： <span id="platformFee"></span></p>
+                    <p>總計成本： <span id="finalCost"></span></p>
+                    <p>運輸成本： <span id="transportationCost"></span></p>
+                    <p>滿減優惠： <span id="discountPercent"></span></p>
+                </div>
+                <div class="col">
+                    <p>定價TWD： <span id="finalPrice"></span></p>
+                    <p>售價TWD： <span id="finalSellingPrice_vekzqm"></span></p>
+                    <p>定價RMB： <span id="sellingPrice"></span></p>
+                    <p>最終利率： <span id="finalProfit"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+            const API_KEY = "91adc9ba5e602a3e482c8c0e"; // 替換為你的API KEY
+            function calculate() {
+                // 获取输入框中的值
+                const length = document.getElementById("length").value;
+                const width = document.getElementById("width").value;
+                const height = document.getElementById("height").value;
+                const liry = document.getElementById("liry").value;
+                const weight = document.getElementById("weight").value;
+                const cost = document.getElementById("cost").value;
+                const vekzlv = document.getElementById("vekzlv").value;   //折扣率
+
+                // 获取复选框中的值
+                const noTransportationFee = document.getElementById("noTransportationFee").checked;
+                const transactionFee = document.getElementById("transactionFee").checked;
+                const paymentServiceFee = document.getElementById("paymentServiceFee").checked;
+                const taxFee = document.getElementById("taxFee").checked;
+
+                // 获取满减门槛和满减力度
+                const threshold1 = document.getElementById("threshold1").value;
+                const threshold2 = document.getElementById("threshold2").value;
+                const threshold3 = document.getElementById("threshold3").value;
+                const discount1 = document.getElementById("discount1").value;
+                const discount2 = document.getElementById("discount2").value;
+                const discount3 = document.getElementById("discount3").value;
+
+                // 调用API获取汇率
+                axios.get(`https://v6.exchangerate-api.com/v6/${API_KEY}/latest/CNY`)
+                    .then(response => {
+                        const exchangeRate = response.data.conversion_rates.TWD;
+                        console.log(exchangeRate);
+
+                        let fwlv = 0;
+                        if (noTransportationFee) {
+                            fwlv += 0.05; // 免运手续费
+                        }
+
+                        if (transactionFee) {
+                            fwlv += 0.055; // 成交手续费
+                        }
+
+                        if (paymentServiceFee) {
+                            fwlv += 0.02; // 金流服务费
+                        }
+
+                        if (taxFee) {
+                            fwlv += 0.04; // 稅金费
+                        }
+                        console.log(fwlv);
+                        // 使用现有公式计算相关费用和价格
+                        let transportationCost = ((parseInt(length) * parseInt(width) * parseInt(height) / 6000) + parseInt(weight)) / 2 * 7.5; // 运输费用  
+                        let finalCost = transportationCost + parseInt(cost); // 总成本 = 成本+運費
+                        let sellingPrice = finalCost / (1 - liry/100 - fwlv); // 折扣前售价：售價 = 總成本/(1-利潤率-佣金率)
+                        console.log(sellingPrice);
+                        let platformFee = sellingPrice * fwlv; // 平台费用 = 售價 * 佣金率
+                        // let finalPrice = sellingPrice; // 折扣前售价
+
+                        let finalProfit = sellingPrice * liry / 100;
+
+                        // 计算满减折扣
+                        let thresholdArray = [parseInt(threshold1), parseInt(threshold2), parseInt(threshold3)];
+                        let discountArray = [parseInt(discount1), parseInt(discount2), parseInt(discount3)];
+                        let discountPercent = 0;
+                        // let finalProfit = 0;
+                        for (let i = 0; i < thresholdArray.length; i++) {
+                            if ((sellingPrice * exchangeRate) >= thresholdArray[i]) {
+                                discountPercent = discountArray[i];
+                            }
+                        }
+                        let finalPrice = sellingPrice * exchangeRate + discountPercent;
+
+                        finalProfit = finalCost / (sellingPrice + discountPercent/exchangeRate - finalCost) * 100;
+                        // finalProfit = (finalPrice - finalCost * exchangeRate) / (finalCost* exchangeRate) * 100;
+
+                        const finalSellingPrice = sellingPrice * (100 - discountPercent) / 100 + platformFee; // 最终售价
+
+                        // 展示计算结果
+                        console.log(finalSellingPrice);
+                        finalSellingPrice_vekzqm = finalPrice / (vekzlv / 100);
+                        
+                        document.getElementById("transportationCost").innerText = "￥" + transportationCost.toFixed(1);   // 運費
+                        document.getElementById("platformFee").innerText = "￥" + platformFee.toFixed(2);                 // 平台費
+                        document.getElementById("finalCost").innerText = "￥" + finalCost.toFixed(2);                     // 總計成本
+                        document.getElementById("finalPrice").innerText = "￥" + finalPrice.toFixed(2);                   // 最終售價
+                        document.getElementById("discountPercent").innerText = "￥" + discountPercent.toFixed(2);         // 減免費用
+                        document.getElementById("finalProfit").innerText = finalProfit.toFixed(2) + "%";                  // 最終利率
+                        document.getElementById("sellingPrice").innerText = "￥" + finalSellingPrice.toFixed(2);          // 售價
+                        document.getElementById("finalSellingPrice_vekzqm").innerText = "￥" + finalSellingPrice_vekzqm.toFixed(2);          // 售價
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        alert("獲取匯率失敗，請刷新頁面重試。");
+                    });
+            }
+        </script>
+</body>
+
+</html>
