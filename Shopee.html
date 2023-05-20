@@ -6,10 +6,14 @@
     <meta charset="UTF-8">
     <title>產品定價計算器</title>
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
 </head>
 
 <body>
+    <style>
+        .number {
+            font-family: menlo, 'Courier New',system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+    </style>
     <div class="container mt-5">
         <h1 class="text-center mb-5">產品定價計算器</h1>
         <form>
@@ -76,6 +80,16 @@
                 </div>
             </div>
             <div class="form-group row">
+                <label for="threshold4" class="col-sm-2 col-form-label text-right">門檻4（TWD）：</label>
+                <div class="col-sm-2">
+                    <input type="text" id="threshold4" class="form-control" value="1299" required>
+                </div>
+                <label for="discount4" class="col-sm-2 col-form-label text-right">滿減4（TWD）：</label>
+                <div class="col-sm-2">
+                    <input type="text" id="discount4" class="form-control" value="50" required>
+                </div>
+            </div>
+            <div class="form-group row">
                 <div class="col-sm-2"></div>
                 <div class="col-sm-10">
                     <div class="form-check form-check-inline">
@@ -110,20 +124,20 @@
             <div class="card-header">
                 <h2 class="text-center">計算結果</h2>
             </div>
-            <div class="row">
+            <div class="row number">
                 <div class="col">
                 </div>
                 <div class="col">
-                    <p>平台費用： <span id="platformFee"></span></p>
-                    <p>總計成本： <span id="finalCost"></span></p>
-                    <p>運輸成本： <span id="transportationCost"></span></p>
-                    <p>滿減優惠： <span id="discountPercent"></span></p>
+                    <p>平台費用🟥： <span id="platformFee"></span></p>
+                    <p>總計成本🟥： <span id="finalCost"></span></p>
+                    <p>運輸成本🟥： <span id="transportationCost"></span></p>
+                    <p>滿減優惠🟦： <span id="discountPercent"></span></p>
                 </div>
                 <div class="col">
-                    <p>定價TWD： <span id="finalPrice"></span></p>
-                    <p>售價TWD： <span id="finalSellingPrice_vekzqm"></span></p>
-                    <p>定價RMB： <span id="sellingPrice"></span></p>
-                    <p>最終利率： <span id="finalProfit"></span></p>
+                    <p>定價RMB🟥： <span id="sellingPrice"></span></p>
+                    <p>定價TWD🟦： <span id="finalSellingPrice_vekzqm"></span></p>
+                    <p>售價TWD🟦： <span id="finalPrice"></span></p>
+                    <p>最終利率🔣： <span id="finalProfit"></span></p>
                 </div>
             </div>
         </div>
@@ -151,15 +165,17 @@
                 const threshold1 = document.getElementById("threshold1").value;
                 const threshold2 = document.getElementById("threshold2").value;
                 const threshold3 = document.getElementById("threshold3").value;
+                const threshold4 = document.getElementById("threshold4").value;
                 const discount1 = document.getElementById("discount1").value;
                 const discount2 = document.getElementById("discount2").value;
                 const discount3 = document.getElementById("discount3").value;
+                const discount4 = document.getElementById("discount4").value;
 
                 // 调用API获取汇率
                 axios.get(`https://v6.exchangerate-api.com/v6/${API_KEY}/latest/CNY`)
                     .then(response => {
                         const exchangeRate = response.data.conversion_rates.TWD;
-                        console.log(exchangeRate);
+                        // console.log(exchangeRate);
 
                         let fwlv = 0;
                         if (noTransportationFee) {
@@ -177,20 +193,20 @@
                         if (taxFee) {
                             fwlv += 0.04; // 稅金费
                         }
-                        console.log(fwlv);
+                        // console.log(fwlv);
                         // 使用现有公式计算相关费用和价格
                         let transportationCost = ((parseInt(length) * parseInt(width) * parseInt(height) / 6000) + parseInt(weight)) / 2 * 7.5; // 运输费用  
                         let finalCost = transportationCost + parseInt(cost); // 总成本 = 成本+運費
                         let sellingPrice = finalCost / (1 - liry/100 - fwlv); // 折扣前售价：售價 = 總成本/(1-利潤率-佣金率)
-                        console.log(sellingPrice);
+                        // console.log(sellingPrice);
                         let platformFee = sellingPrice * fwlv; // 平台费用 = 售價 * 佣金率
                         // let finalPrice = sellingPrice; // 折扣前售价
 
-                        let finalProfit = sellingPrice * liry / 100;
+                        // let finalProfit = sellingPrice * liry / 100;
 
                         // 计算满减折扣
-                        let thresholdArray = [parseInt(threshold1), parseInt(threshold2), parseInt(threshold3)];
-                        let discountArray = [parseInt(discount1), parseInt(discount2), parseInt(discount3)];
+                        let thresholdArray = [parseInt(threshold1), parseInt(threshold2), parseInt(threshold3),parseInt(threshold4)];
+                        let discountArray = [parseInt(discount1), parseInt(discount2), parseInt(discount3), parseInt(discount4)];
                         let discountPercent = 0;
                         // let finalProfit = 0;
                         for (let i = 0; i < thresholdArray.length; i++) {
@@ -200,23 +216,24 @@
                         }
                         let finalPrice = sellingPrice * exchangeRate + discountPercent;
 
-                        finalProfit = finalCost / (sellingPrice + discountPercent/exchangeRate - finalCost) * 100;
-                        // finalProfit = (finalPrice - finalCost * exchangeRate) / (finalCost* exchangeRate) * 100;
-
+                        // finalProfit = finalCost / (sellingPrice + discountPercent/exchangeRate - finalCost) * 100;
+                        finalProfit = (finalPrice - finalCost * exchangeRate - discountPercent - platformFee * exchangeRate) / (finalPrice) * 100;
+                        console.log(finalPrice - finalCost * exchangeRate - discountPercent - platformFee * exchangeRate)/exchangeRate;
+                                        // （最終售價 - 總計成本臺幣 - 滿減優惠 - 平臺費用）/最終售價臺幣
                         const finalSellingPrice = sellingPrice * (100 - discountPercent) / 100 + platformFee; // 最终售价
 
-                        // 展示计算结果
                         console.log(finalSellingPrice);
                         finalSellingPrice_vekzqm = finalPrice / (vekzlv / 100);
-                        
+                        sellingPrice = finalPrice / exchangeRate;
+                        // 展示计算结果
                         document.getElementById("transportationCost").innerText = "￥" + transportationCost.toFixed(1);   // 運費
                         document.getElementById("platformFee").innerText = "￥" + platformFee.toFixed(2);                 // 平台費
                         document.getElementById("finalCost").innerText = "￥" + finalCost.toFixed(2);                     // 總計成本
-                        document.getElementById("finalPrice").innerText = "￥" + finalPrice.toFixed(2);                   // 最終售價
-                        document.getElementById("discountPercent").innerText = "￥" + discountPercent.toFixed(2);         // 減免費用
+                        document.getElementById("finalPrice").innerText = "￥" + finalPrice.toFixed(0);                   // 最終售價 TWD
+                        document.getElementById("discountPercent").innerText = "￥" + discountPercent.toFixed(0);         // 減免費用
                         document.getElementById("finalProfit").innerText = finalProfit.toFixed(2) + "%";                  // 最終利率
-                        document.getElementById("sellingPrice").innerText = "￥" + finalSellingPrice.toFixed(2);          // 售價
-                        document.getElementById("finalSellingPrice_vekzqm").innerText = "￥" + finalSellingPrice_vekzqm.toFixed(2);          // 售價
+                        document.getElementById("sellingPrice").innerText = "￥" + finalSellingPrice.toFixed(0);          // 售價
+                        document.getElementById("finalSellingPrice_vekzqm").innerText = "￥" + finalSellingPrice_vekzqm.toFixed(0);          // 售價
                     })
                     .catch(error => {
                         console.log(error);
