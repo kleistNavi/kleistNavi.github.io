@@ -108,7 +108,7 @@
                 var input = $('#input').val();
                 $.ajax({
                     type: 'POST',
-                    url: 'http://openwrt.kleist.world:5000',
+                    url: 'https://k13i5t.pythonanywhere.com',
                     data: { text: input },
                     success: function(response) {
                         console.log(response.result);
